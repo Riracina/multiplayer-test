@@ -1,0 +1,25 @@
+[gd_scene load_steps=6 format=3 uid="uid://b5qie3n4vlua4"]
+
+[ext_resource type="PackedScene" uid="uid://dsii0g67kw7qq" path="res://Land.blend" id="1_pl1wv"]
+[ext_resource type="Texture2D" uid="uid://c6ghabdsgvrkq" path="res://icon.svg" id="2_iooh7"]
+[ext_resource type="Texture2D" uid="uid://c4bo6jta5do8u" path="res://True Distress.webp" id="3_asfs6"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nfuxm"]
+albedo_texture = ExtResource("2_iooh7")
+uv1_scale = Vector3(1.895, 1.895, 1.895)
+uv1_offset = Vector3(-0.45, -0.165, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_atr1s"]
+albedo_color = Color(0.13725491, 1, 0.47058824, 0.5137255)
+albedo_texture = ExtResource("3_asfs6")
+uv1_triplanar = true
+
+[node name="Land" instance=ExtResource("1_pl1wv")]
+
+[node name="Land" parent="." index="0"]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, -0.0047119856, 0.03899336, 0.022275448)
+surface_material_override/0 = SubResource("StandardMaterial3D_nfuxm")
+surface_material_override/1 = SubResource("StandardMaterial3D_atr1s")
+
+[node name="CollisionShape3D" parent="Land/StaticBody3D" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.004918957, -3.8147027e-07, 0.00043907168)

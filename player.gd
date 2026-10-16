@@ -1,9 +1,10 @@
 extends CharacterBody3D
-@onready var camera = $Camera3D
+@onready var camera = $Body/Camera3D
+@onready var anim = $Body/AnimationPlayer
 var accel = 0
 
 #make this a var later
-const SENSITIVITY = 0.01
+const SENSITIVITY = 0.004
 
 const SPEED = 10.0
 const ACCEL_FACTOR = 0.25
@@ -13,7 +14,7 @@ const JUMP_VELOCITY = 4.5
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-
+	
 func _unhandled_input(event):
 	if event is InputEventMouseMotion:
 		rotate_y(-event.relative.x * SENSITIVITY)
@@ -26,8 +27,9 @@ func _physics_process(delta: float) -> void:
 		velocity += get_gravity() * delta
 
 	# Handle jump.
-	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
+	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
+		var jump_timer = 1
 
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
@@ -44,5 +46,22 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity.x = move_toward(velocity.x, 0, abs(velocity.x) * accel)
 		velocity.z = move_toward(velocity.z, 0, abs(velocity.z) * accel)
-
+	
+	#animation
+	if input_dir != Vector2.ZERO and is_on_floor():
+		anim.play("walk")
+	else:
+		anim.play("idle")
+	
+	#handle air collisions
+	if is_on_wall_only():
+		if Input.is_action_just_pressed("jump"):
+			var normal: Vector3 = get_last_slide_collision().get_normal()
+			velocity += normal * SPEED
+			velocity.y = JUMP_VELOCITY / 2
+		#lose ~5% of speed per frame
+		else:
+			velocity.x = move_toward(velocity.x, 0, abs(velocity.x) * 0.05)
+			velocity.z = move_toward(velocity.z, 0, abs(velocity.z) * 0.05)
+	
 	move_and_slide()

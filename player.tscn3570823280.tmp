@@ -1,0 +1,76 @@
+[gd_scene load_steps=8 format=3 uid="uid://crkgfqy2ll10q"]
+
+[ext_resource type="Script" uid="uid://bq0tfl3nwxe4h" path="res://player.gd" id="1_4flbx"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_4flbx"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_onrkg"]
+
+[sub_resource type="Animation" id="Animation_4flbx"]
+resource_name = "walk"
+loop_mode = 1
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Body/Left Leg")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(-0.01, 1, -0.5, -1, 0, 0.25, 1, -0.5, -0.8, -0.4, 0.5, 1, -0.5, -1, 0, 0.75, 1, -0.5, -0.8, 0.4)
+
+[sub_resource type="Animation" id="Animation_onrkg"]
+length = 0.001
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Body/Left Leg")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, -0.5, -1, 0)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_onrkg"]
+_data = {
+&"RESET": SubResource("Animation_onrkg"),
+&"walk": SubResource("Animation_4flbx")
+}
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_onrkg"]
+
+[node name="player" type="CharacterBody3D"]
+script = ExtResource("1_4flbx")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_4flbx")
+
+[node name="Left Leg" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -0.5, -1, 0)
+mesh = SubResource("SphereMesh_onrkg")
+skeleton = NodePath("../..")
+
+[node name="Right Leg" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.5, -1, 0)
+mesh = SubResource("SphereMesh_onrkg")
+skeleton = NodePath("../..")
+
+[node name="Left Arm" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -0.5, 0, 0)
+mesh = SubResource("SphereMesh_onrkg")
+skeleton = NodePath("../..")
+
+[node name="Right Arm" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.5, 0, 0)
+mesh = SubResource("SphereMesh_onrkg")
+skeleton = NodePath("../..")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5088956, 0)
+cull_mask = 1048573
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_onrkg")
+}
+
+[node name="Body Collision" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CylinderShape3D_onrkg")
